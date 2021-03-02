@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.biz.mapper.BizRecognizeHistoryMapper">
+    
+    <resultMap type="BizRecognizeHistory" id="BizRecognizeHistoryResult">
+        <result property="id"    column="id"    />
+        <result property="authorityKey"    column="authority_key"    />
+        <result property="recognizeTime"    column="recognize_time"    />
+        <result property="recognizeFrom"    column="recognize_from"    />
+        <result property="expense"    column="expense"    />
+        <result property="result"    column="result"    />
+        <result property="status"    column="status"    />
+        <result property="recognizeType"    column="recognize_type"    />
+        <result property="recognizeIp"    column="recognize_ip"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBizRecognizeHistoryVo">
+        select id, authority_key, recognize_time, recognize_from, expense, result, status, recognize_type, recognize_ip, create_by, create_time, update_by, update_time, remark from biz_recognize_history
+    </sql>
+
+    <select id="selectBizRecognizeHistoryList" parameterType="BizRecognizeHistory" resultMap="BizRecognizeHistoryResult">
+        <include refid="selectBizRecognizeHistoryVo"/>
+        <where>  
+            <if test="authorityKey != null  and authorityKey != ''"> and authority_key = #{authorityKey}</if>
+            <if test="recognizeTime != null  and recognizeTime != ''"> and recognize_time = #{recognizeTime}</if>
+            <if test="recognizeFrom != null  and recognizeFrom != ''"> and recognize_from = #{recognizeFrom}</if>
+            <if test="expense != null  and expense != ''"> and expense = #{expense}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="recognizeType != null  and recognizeType != ''"> and recognize_type = #{recognizeType}</if>
+            <if test="recognizeIp != null  and recognizeIp != ''"> and recognize_ip = #{recognizeIp}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizRecognizeHistoryById" parameterType="Long" resultMap="BizRecognizeHistoryResult">
+        <include refid="selectBizRecognizeHistoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBizRecognizeHistory" parameterType="BizRecognizeHistory" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_recognize_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="authorityKey != null and authorityKey != ''">authority_key,</if>
+            <if test="recognizeTime != null">recognize_time,</if>
+            <if test="recognizeFrom != null">recognize_from,</if>
+            <if test="expense != null">expense,</if>
+            <if test="result != null">result,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="recognizeType != null">recognize_type,</if>
+            <if test="recognizeIp != null">recognize_ip,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="authorityKey != null and authorityKey != ''">#{authorityKey},</if>
+            <if test="recognizeTime != null">#{recognizeTime},</if>
+            <if test="recognizeFrom != null">#{recognizeFrom},</if>
+            <if test="expense != null">#{expense},</if>
+            <if test="result != null">#{result},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="recognizeType != null">#{recognizeType},</if>
+            <if test="recognizeIp != null">#{recognizeIp},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizRecognizeHistory" parameterType="BizRecognizeHistory">
+        update biz_recognize_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="authorityKey != null and authorityKey != ''">authority_key = #{authorityKey},</if>
+            <if test="recognizeTime != null">recognize_time = #{recognizeTime},</if>
+            <if test="recognizeFrom != null">recognize_from = #{recognizeFrom},</if>
+            <if test="expense != null">expense = #{expense},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="recognizeType != null">recognize_type = #{recognizeType},</if>
+            <if test="recognizeIp != null">recognize_ip = #{recognizeIp},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBizRecognizeHistoryById" parameterType="Long">
+        delete from biz_recognize_history where id = #{id}
+    </delete>
+
+    <delete id="deleteBizRecognizeHistoryByIds" parameterType="String">
+        delete from biz_recognize_history where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
