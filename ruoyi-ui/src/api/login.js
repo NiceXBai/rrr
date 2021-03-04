@@ -38,3 +38,19 @@ export function getCodeImg() {
     method: 'get'
   })
 }
+
+// 登录方法
+export function register(username, password,repassword, code, uuid) {
+  const data = {
+    username,
+    password,
+    repassword,
+    code,
+    uuid
+  }
+  return request({
+    url: '/register',
+    method: 'post',
+    data: data
+  })
+}
