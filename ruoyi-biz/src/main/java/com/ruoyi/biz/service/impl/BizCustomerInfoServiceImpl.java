@@ -32,6 +32,11 @@ public class BizCustomerInfoServiceImpl implements IBizCustomerInfoService
         return bizCustomerInfoMapper.selectBizCustomerInfoById(id);
     }
 
+    @Override
+    public BizCustomerInfo selectBizCustomerInfoByUserId(Long id) {
+        return bizCustomerInfoMapper.selectBizCustomerInfoByUserId(id);
+    }
+
     /**
      * 查询用户信息列表
      * 

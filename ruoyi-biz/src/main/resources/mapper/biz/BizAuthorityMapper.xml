@@ -34,7 +34,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectBizAuthorityVo"/>
         where key_id = #{keyId}
     </select>
-        
+    <select id="selectBizAuthorityByCreater" parameterType="String" resultMap="BizAuthorityResult">
+        <include refid="selectBizAuthorityVo"/>
+        where createBy = #{createBy}
+    </select>
+
     <insert id="insertBizAuthority" parameterType="BizAuthority" useGeneratedKeys="true" keyProperty="keyId">
         insert into biz_authority
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -1,5 +1,8 @@
 package com.ruoyi.common.core.domain.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 /**
  * 用户注册对象
  * 
@@ -29,6 +32,7 @@ public class RegisterBody
      * 唯一标识
      */
     private String uuid = "";
+
     public String getUuid()
     {
         return uuid;
@@ -38,6 +42,9 @@ public class RegisterBody
     {
         this.uuid = uuid;
     }
+
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
     public String getRepassword() {
         return repassword;
     }
@@ -46,8 +53,8 @@ public class RegisterBody
         this.repassword = repassword;
     }
 
-
-
+    @NotBlank(message = "用户手机号不能为空")
+    @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
     public String getUsername()
     {
         return username;
@@ -57,7 +64,8 @@ public class RegisterBody
     {
         this.username = username;
     }
-
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
     public String getPassword()
     {
         return password;

@@ -26,12 +26,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null  and balance != ''"> and balance = #{balance}</if>
         </where>
     </select>
-    
+
     <select id="selectBizCustomerInfoById" parameterType="Long" resultMap="BizCustomerInfoResult">
         <include refid="selectBizCustomerInfoVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectBizCustomerInfoByUserId" parameterType="Long" resultMap="BizCustomerInfoResult">
+        <include refid="selectBizCustomerInfoVo"/>
+        where userId = #{userId}
+    </select>
     <insert id="insertBizCustomerInfo" parameterType="BizCustomerInfo" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

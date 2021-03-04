@@ -18,7 +18,13 @@ public interface IBizAuthorityService
      * @return 调用key
      */
     public BizAuthority selectBizAuthorityById(Long keyId);
-
+    /**
+     * 查询调用key
+     *
+     * @param createBy 创建者
+     * @return 调用key
+     */
+    public BizAuthority selectBizAuthorityByCreater(String createBy);
     /**
      * 查询调用key列表
      * 

@@ -32,6 +32,12 @@ public class BizAuthorityServiceImpl implements IBizAuthorityService
         return bizAuthorityMapper.selectBizAuthorityById(keyId);
     }
 
+    @Override
+    public BizAuthority selectBizAuthorityByCreater(String createBy) {
+        return bizAuthorityMapper.selectBizAuthorityByCreater(createBy);
+    }
+
+
     /**
      * 查询调用key列表
      * 

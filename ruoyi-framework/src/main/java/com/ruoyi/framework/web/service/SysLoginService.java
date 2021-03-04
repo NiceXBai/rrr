@@ -87,50 +87,21 @@ public class SysLoginService
     }
 
 
-    public String register(String username, String password, String repassword,String code, String uuid)
+    public boolean verifyKey( String code,String uuid)
     {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
-        if (repassword!=null&&repassword.equals(password))
-        {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.FAIL, MessageUtils.message("user.jcaptcha.expire")));
-            throw new CaptchaExpireException();
-        }
         if (captcha == null)
         {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.FAIL, MessageUtils.message("user.jcaptcha.expire")));
+
             throw new CaptchaExpireException();
         }
         if (!code.equalsIgnoreCase(captcha))
         {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.FAIL, MessageUtils.message("user.jcaptcha.error")));
+
             throw new CaptchaException();
         }
-        // 用户验证
-        Authentication authentication = null;
-        try
-        {
-            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        }
-        catch (Exception e)
-        {
-            if (e instanceof BadCredentialsException)
-            {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
-                throw new UserPasswordNotMatchException();
-            }
-            else
-            {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
-                throw new CustomException(e.getMessage());
-            }
-        }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        // 生成token
-        return tokenService.createToken(loginUser);
+        return true;
     }
 }

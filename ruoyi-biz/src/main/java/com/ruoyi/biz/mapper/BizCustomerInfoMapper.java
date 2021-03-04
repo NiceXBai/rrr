@@ -58,4 +58,6 @@ public interface BizCustomerInfoMapper
      * @return 结果
      */
     public int deleteBizCustomerInfoByIds(Long[] ids);
+
+    public BizCustomerInfo selectBizCustomerInfoByUserId(Long id);
 }

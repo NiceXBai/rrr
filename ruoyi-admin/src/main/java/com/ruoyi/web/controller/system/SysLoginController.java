@@ -3,7 +3,11 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.model.RegisterBody;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +27,11 @@ import com.ruoyi.system.service.ISysMenuService;
 
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
-public class SysLoginController
-{
+public class SysLoginController {
     @Autowired
     private SysLoginService loginService;
 
@@ -41,15 +44,16 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ISysUserService userService;
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登录信息
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody)
-    {
+    public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
@@ -64,8 +68,7 @@ public class SysLoginController
      * @return 用户信息
      */
     @GetMapping("getInfo")
-    public AjaxResult getInfo()
-    {
+    public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         SysUser user = loginUser.getUser();
         // 角色集合
@@ -78,14 +81,14 @@ public class SysLoginController
         ajax.put("permissions", permissions);
         return ajax;
     }
+
     /**
      * 获取路由信息
      *
      * @return 路由信息
      */
     @GetMapping("getRouters")
-    public AjaxResult getRouters()
-    {
+    public AjaxResult getRouters() {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         // 用户信息
         SysUser user = loginUser.getUser();
@@ -100,12 +103,30 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterBody registerBody)
-    {
-        AjaxResult ajax = AjaxResult.success();
-        // 生成令牌
-        String token = loginService.register(registerBody.getUsername(), registerBody.getPassword(),registerBody.getRepassword(), registerBody.getCode());
-        ajax.put(Constants.TOKEN, token);
-        return ajax;
+    public AjaxResult register(@RequestBody RegisterBody registerBody) {
+        loginService.verifyKey( registerBody.getCode(),registerBody.getUuid());
+        SysUser user = new SysUser();
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(registerBody.getUsername()))) {
+            return AjaxResult.error("登录账号已存在");
+        } else if (registerBody.getPassword().equals(registerBody.getRepassword())) {
+            return AjaxResult.error( "请确认密码");
+        }
+        user.setPassword(registerBody.getPassword());
+        user.setNickName(registerBody.getUsername());
+        user.setPhonenumber(registerBody.getUsername());
+        user.setUserName(registerBody.getUsername());
+        user.setCreateBy("api");
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+
+
+
+        return toAjax(userService.insertUser(user));
+
     }
+
+    protected AjaxResult toAjax(int rows)
+    {
+        return rows > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+
 }

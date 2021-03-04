@@ -18,7 +18,13 @@ public interface IBizCustomerInfoService
      * @return 用户信息
      */
     public BizCustomerInfo selectBizCustomerInfoById(Long id);
-
+    /**
+     * 查询用户信息
+     *
+     * @param id 用户信息ID
+     * @return 用户信息
+     */
+    public BizCustomerInfo selectBizCustomerInfoByUserId(Long id);
     /**
      * 查询用户信息列表
      * 

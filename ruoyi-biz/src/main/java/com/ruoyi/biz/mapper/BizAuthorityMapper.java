@@ -19,6 +19,7 @@ public interface BizAuthorityMapper
      */
     public BizAuthority selectBizAuthorityById(Long keyId);
 
+    public BizAuthority selectBizAuthorityByCreater(String createBy);
     /**
      * 查询调用key列表
      * 

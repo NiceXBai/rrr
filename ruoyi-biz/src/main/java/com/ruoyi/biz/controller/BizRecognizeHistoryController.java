@@ -1,8 +1,13 @@
 package com.ruoyi.biz.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +38,8 @@ public class BizRecognizeHistoryController extends BaseController
     @Autowired
     private IBizRecognizeHistoryService bizRecognizeHistoryService;
 
+    @Autowired
+    private TokenService tokenService;
     /**
      * 查询识别记录列表
      */
