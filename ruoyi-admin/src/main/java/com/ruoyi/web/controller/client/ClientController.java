@@ -74,7 +74,7 @@ public class ClientController extends BaseController {
         BizCustomerInfo bizCustomerInfo = bizCustomerInfoService.selectBizCustomerInfoByUserId(user.getUserId());
         AjaxResult ajax = AjaxResult.success();
         ajax.put("authority", bizAuthority);
-        ajax.put("posts", bizCustomerInfo);
+        ajax.put("info", bizCustomerInfo);
         return ajax;
 
     }

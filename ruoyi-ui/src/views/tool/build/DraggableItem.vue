@@ -83,7 +83,7 @@ export default {
   },
   props: [
     'element',
-    'index',
+    'info.vue',
     'drawingList',
     'activeId',
     'formConf'
