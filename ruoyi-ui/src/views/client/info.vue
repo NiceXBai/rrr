@@ -19,7 +19,7 @@ export default {
       // 遮罩层
       loading: true,
       key:"",
-      balance:""
+      balance:"0.0"
     };
   },
   created() {

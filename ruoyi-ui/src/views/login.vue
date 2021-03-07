@@ -125,6 +125,7 @@ export default {
       };
     },
     handleLogin() {
+
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
@@ -138,6 +139,7 @@ export default {
             Cookies.remove('rememberMe');
           }
           this.$store.dispatch("Login", this.loginForm).then(() => {
+            console.log(this.redirect);
             this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
           }).catch(() => {
             this.loading = false;
@@ -147,7 +149,7 @@ export default {
       });
     },
     handleRegister() {
-      this.$router.push({ path: this.redirect || "/register" }).catch(()=>{});
+      this.$router.push({ path:  "/register" }).catch(()=>{});
     }
   }
 };

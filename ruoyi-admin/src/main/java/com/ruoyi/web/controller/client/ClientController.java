@@ -13,6 +13,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +44,7 @@ public class ClientController extends BaseController {
     /**
      * 用户查询识别记录列表
      */
-    @PreAuthorize("@ss.hasPermi('client:history:userlist')")
+    @PreAuthorize("@ss.hasPermi('client:history:list')")
     @GetMapping("/userlist")
     public TableDataInfo userlist(BizRecognizeHistory bizRecognizeHistory) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
@@ -68,12 +69,24 @@ public class ClientController extends BaseController {
         }
         SysUser user = loginUser.getUser();
 
-
+        AjaxResult ajax = AjaxResult.success();
         BizAuthority bizAuthority = bizAuthorityService.selectBizAuthorityByCreater(user.getUserId() + "");
 
+        if(bizAuthority==null){
+            BizAuthority newAuthority = new BizAuthority();
+            newAuthority.setAuthorityKey(IdUtils.fastSimpleUUID());
+            newAuthority.setDelFlag("0");
+            newAuthority.setStatus("1");
+
+            newAuthority.setCreateBy(user.getUserId()+"");
+            bizAuthorityService.insertBizAuthority(newAuthority);
+            ajax.put("authority", newAuthority);
+        }else {
+            ajax.put("authority", bizAuthority);
+        }
         BizCustomerInfo bizCustomerInfo = bizCustomerInfoService.selectBizCustomerInfoByUserId(user.getUserId());
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("authority", bizAuthority);
+
+
         ajax.put("info", bizCustomerInfo);
         return ajax;
 

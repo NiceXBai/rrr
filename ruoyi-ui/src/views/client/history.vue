@@ -10,15 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="识别耗时" prop="recognizeTime">
-        <el-input
-          v-model="queryParams.recognizeTime"
-          placeholder="请输入识别耗时"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="识别方式" prop="recognizeFrom">
         <el-input
           v-model="queryParams.recognizeFrom"
@@ -28,34 +20,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="费用" prop="expense">
-        <el-input
-          v-model="queryParams.expense"
-          placeholder="请输入费用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="识别类型" prop="recognizeType">
         <el-select v-model="queryParams.recognizeType" placeholder="请选择识别类型" clearable size="small">
           <el-option label="请选择字典生成" value="" />
         </el-select>
       </el-form-item>
-      <el-form-item label="识别ip" prop="recognizeIp">
-        <el-input
-          v-model="queryParams.recognizeIp"
-          placeholder="请输入识别ip"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -63,18 +34,18 @@
     </el-form>
 
 
-    <el-table v-loading="loading" :data="historyList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="historyList" >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="key" align="center" prop="authorityKey" />
       <el-table-column label="识别耗时" align="center" prop="recognizeTime" />
-      <el-table-column label="识别方式" align="center" prop="recognizeFrom" />
+
       <el-table-column label="费用" align="center" prop="expense" />
       <el-table-column label="结果" align="center" prop="result" />
-      <el-table-column label="状态" align="center" prop="status" />
+
       <el-table-column label="识别类型" align="center" prop="recognizeType" />
       <el-table-column label="识别ip" align="center" prop="recognizeIp" />
-      <el-table-column label="备注" align="center" prop="remark" />
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -98,7 +69,7 @@
 </template>
 
 <script>
-import { listHistory} from "@/api/biz/history";
+import { listHistory} from "@/api/client/client";
 
 export default {
   name: "History",
@@ -162,7 +133,17 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
-    }
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
   }
 };
 </script>

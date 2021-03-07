@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectBizCustomerInfoByUserId" parameterType="Long" resultMap="BizCustomerInfoResult">
         <include refid="selectBizCustomerInfoVo"/>
-        where userId = #{userId}
+        where user_id = #{userId}
     </select>
     <insert id="insertBizCustomerInfo" parameterType="BizCustomerInfo" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer_info

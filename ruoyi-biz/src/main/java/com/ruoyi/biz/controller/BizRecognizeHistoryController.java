@@ -38,8 +38,6 @@ public class BizRecognizeHistoryController extends BaseController
     @Autowired
     private IBizRecognizeHistoryService bizRecognizeHistoryService;
 
-    @Autowired
-    private TokenService tokenService;
     /**
      * 查询识别记录列表
      */

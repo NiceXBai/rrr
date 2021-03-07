@@ -111,7 +111,7 @@ public class SysLoginController {
         } else if (registerBody.getPassword().equals(registerBody.getRepassword())) {
             return AjaxResult.error( "请确认密码");
         }
-        user.setPassword(registerBody.getPassword());
+
         user.setNickName(registerBody.getUsername());
         user.setPhonenumber(registerBody.getUsername());
         user.setUserName(registerBody.getUsername());

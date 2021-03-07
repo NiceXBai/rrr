@@ -63,7 +63,6 @@
     </div>
   </div>
 </template>
-register
 <script>
 import { register ,getCodeImg} from "@/api/login";
 import Cookies from "js-cookie";
@@ -119,7 +118,7 @@ export default {
     },
 
     handleLogin() {
-      register().then(res => {
+      register(this.loginForm.username,this.loginForm.password,this.loginForm.repassword,this.loginForm.code,this.loginForm.uuid).then(res => {
         if (res.code==200) {
           this.loading = true;
 
