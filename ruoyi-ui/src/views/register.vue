@@ -1,15 +1,15 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form ref="loginForm" :model="registerForm" :rules="loginRules" class="login-form">
       <h3 class="title">若依后台管理系统</h3>
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="手机号">
+        <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="手机号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
-          v-model="loginForm.password"
+          v-model="registerForm.password"
           type="password"
           auto-complete="off"
           placeholder="密码"
@@ -20,7 +20,7 @@
       </el-form-item>
       <el-form-item prop="repassword">
         <el-input
-          v-model="loginForm.repassword"
+          v-model="registerForm.repassword"
           type="password"
           auto-complete="off"
           placeholder="重复密码"
@@ -31,7 +31,7 @@
       </el-form-item>
       <el-form-item prop="code">
         <el-input
-          v-model="loginForm.code"
+          v-model="registerForm.code"
           auto-complete="off"
           placeholder="验证码"
           style="width: 63%"
@@ -50,7 +50,7 @@
           size="medium"
           type="primary"
           style="width:100%;"
-          @click.native.prevent="handleLogin"
+          @click.native.prevent="toRegister"
         >
           <span v-if="!loading">注 册</span>
           <span v-else>注 册 中...</span>
@@ -67,14 +67,14 @@
 import { register ,getCodeImg} from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
-
+import { Notification, MessageBox, Message } from 'element-ui'
 export default {
   name: "Login",
   data() {
     return {
       codeUrl: "",
       cookiePassword: "",
-      loginForm: {
+      registerForm: {
         username: "",
         password: "",
         repassword: "",
@@ -113,21 +113,22 @@ export default {
     getCode() {
       getCodeImg().then(res => {
         this.codeUrl = "data:image/gif;base64," + res.img;
-        this.loginForm.uuid = res.uuid;
+        this.registerForm.uuid = res.uuid;
       });
     },
 
-    handleLogin() {
-      register(this.loginForm.username,this.loginForm.password,this.loginForm.repassword,this.loginForm.code,this.loginForm.uuid).then(res => {
+    toRegister() {
+      register(this.registerForm.username,this.registerForm.password,this.registerForm.repassword,this.registerForm.code,this.registerForm.uuid).then(res => {
         if (res.code==200) {
           this.loading = true;
-
-          this.$store.dispatch("Login", this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || "/login" }).catch(()=>{});
-          }).catch(() => {
-            this.loading = false;
-            this.getCode();
-          });
+          Message({
+            message: "注册成功",
+            type: 'succ'
+          })
+          this.$router.push({ path: this.redirect || "/login" }).catch(()=>{});
+        }else {
+          this.loading = true;
+          this.getCode();
         }
       });
 

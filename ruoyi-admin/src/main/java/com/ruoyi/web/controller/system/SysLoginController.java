@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,12 +104,12 @@ public class SysLoginController {
      * @return 结果
      */
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterBody registerBody) {
+    public AjaxResult register(@Validated @RequestBody RegisterBody registerBody) {
         loginService.verifyKey( registerBody.getCode(),registerBody.getUuid());
         SysUser user = new SysUser();
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(registerBody.getUsername()))) {
             return AjaxResult.error("登录账号已存在");
-        } else if (registerBody.getPassword().equals(registerBody.getRepassword())) {
+        } else if (!registerBody.getPassword().equals(registerBody.getRepassword())) {
             return AjaxResult.error( "请确认密码");
         }
 
@@ -116,7 +117,7 @@ public class SysLoginController {
         user.setPhonenumber(registerBody.getUsername());
         user.setUserName(registerBody.getUsername());
         user.setCreateBy("api");
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        user.setPassword(SecurityUtils.encryptPassword(registerBody.getPassword()));
 
 
 
