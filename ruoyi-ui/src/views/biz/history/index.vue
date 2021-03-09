@@ -10,52 +10,41 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="识别耗时" prop="recognizeTime">
-        <el-input
-          v-model="queryParams.recognizeTime"
-          placeholder="请输入识别耗时"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="识别方式" prop="recognizeFrom">
-        <el-input
-          v-model="queryParams.recognizeFrom"
-          placeholder="请输入识别方式"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="费用" prop="expense">
-        <el-input
-          v-model="queryParams.expense"
-          placeholder="请输入费用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
+
+      <!--<el-form-item label="识别方式" prop="recognizeFrom">-->
+        <!--<el-input-->
+          <!--v-model="queryParams.recognizeFrom"-->
+          <!--placeholder="请输入识别方式"-->
+          <!--clearable-->
+          <!--size="small"-->
+          <!--@keyup.enter.native="handleQuery"-->
+        <!--/>-->
+      <!--</el-form-item>-->
+   <!---->
+      <!--<el-form-item label="状态" prop="status">-->
+        <!--<el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">-->
+          <!--<el-option label="请选择字典生成" value="" />-->
+        <!--</el-select>-->
+      <!--</el-form-item>-->
       <el-form-item label="识别类型" prop="recognizeType">
         <el-select v-model="queryParams.recognizeType" placeholder="请选择识别类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in typeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="识别ip" prop="recognizeIp">
-        <el-input
-          v-model="queryParams.recognizeIp"
-          placeholder="请输入识别ip"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--<el-form-item label="识别ip" prop="recognizeIp">-->
+        <!--<el-input-->
+          <!--v-model="queryParams.recognizeIp"-->
+          <!--placeholder="请输入识别ip"-->
+          <!--clearable-->
+          <!--size="small"-->
+          <!--@keyup.enter.native="handleQuery"-->
+        <!--/>-->
+      <!--</el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -139,7 +128,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -214,6 +203,7 @@ export default {
       total: 0,
       // 识别记录表格数据
       historyList: [],
+      typeOptions:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -246,7 +236,11 @@ export default {
   },
   created() {
     this.getList();
-  },
+
+    this.getDicts("sys_normal_disable").then(response => {
+      this.statusOptions = response.data;
+    });
+    },
   methods: {
     /** 查询识别记录列表 */
     getList() {
