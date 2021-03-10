@@ -105,7 +105,7 @@
       <el-table-column label="识别方式" align="center" prop="recognizeFrom" />
       <el-table-column label="费用" align="center" prop="expense" />
       <el-table-column label="结果" align="center" prop="result" />
-      <el-table-column label="状态" align="center" prop="status" />
+
       <el-table-column label="识别类型" align="center" prop="recognizeType" />
       <el-table-column label="识别ip" align="center" prop="recognizeIp" />
       <el-table-column label="备注" align="center" prop="remark" />
@@ -155,14 +155,15 @@
         <el-form-item label="结果" prop="result">
           <el-input v-model="form.result" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
-          </el-radio-group>
-        </el-form-item>
+
         <el-form-item label="识别类型" prop="recognizeType">
           <el-select v-model="form.recognizeType" placeholder="请选择识别类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="识别ip" prop="recognizeIp">
@@ -237,7 +238,7 @@ export default {
   created() {
     this.getList();
 
-    this.getDicts("sys_normal_disable").then(response => {
+    this.getDicts("client_api_type").then(response => {
       this.statusOptions = response.data;
     });
     },
@@ -319,6 +320,7 @@ export default {
               this.getList();
             });
           } else {
+            this.form.status ="1";
             addHistory(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
