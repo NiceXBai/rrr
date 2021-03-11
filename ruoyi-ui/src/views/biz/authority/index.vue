@@ -12,7 +12,12 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -113,7 +118,11 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="删除标志" prop="delFlag">
@@ -154,6 +163,8 @@ export default {
       total: 0,
       // 调用key表格数据
       authorityList: [],
+      // 状态数据字典
+      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -181,6 +192,10 @@ export default {
   },
   created() {
     this.getList();
+
+    this.getDicts("biz_key_status").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询调用key列表 */

@@ -76,7 +76,7 @@ public class ClientController extends BaseController {
             BizAuthority newAuthority = new BizAuthority();
             newAuthority.setAuthorityKey(IdUtils.fastSimpleUUID());
             newAuthority.setDelFlag("0");
-            newAuthority.setStatus("1");
+            newAuthority.setStatus("0");
 
             newAuthority.setCreateBy(user.getUserId()+"");
             bizAuthorityService.insertBizAuthority(newAuthority);
