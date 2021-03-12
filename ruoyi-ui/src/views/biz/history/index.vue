@@ -100,15 +100,20 @@
     <el-table v-loading="loading" :data="historyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="图片" align="center" prop="remark"  width="180">
+        <template slot-scope="scope">
+          <img  :src="scope.row.remark" alt="" style="width: 50px;height: 50px">
+        </template>
+      </el-table-column>
       <el-table-column label="key" align="center" prop="authorityKey" />
       <el-table-column label="识别耗时" align="center" prop="recognizeTime" />
       <el-table-column label="识别方式" align="center" prop="recognizeFrom" />
       <el-table-column label="费用" align="center" prop="expense" />
       <el-table-column label="结果" align="center" prop="result" />
 
-      <el-table-column label="识别类型" align="center" prop="recognizeType" />
+      <el-table-column label="识别类型" align="center" prop="recognizeType" :formatter="recognizeFormat"  />
       <el-table-column label="识别ip" align="center" prop="recognizeIp" />
-      <el-table-column label="备注" align="center" prop="remark" />
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -169,7 +174,7 @@
         <el-form-item label="识别ip" prop="recognizeIp">
           <el-input v-model="form.recognizeIp" placeholder="请输入识别ip" />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="图片" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
@@ -239,7 +244,7 @@ export default {
     this.getList();
 
     this.getDicts("client_api_type").then(response => {
-      this.statusOptions = response.data;
+      this.typeOptions = response.data;
     });
     },
   methods: {
@@ -356,6 +361,9 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
+    },
+    recognizeFormat(row, column){
+      return this.selectDictLabel(this.typeOptions, row.recognizeType);
     }
   }
 };

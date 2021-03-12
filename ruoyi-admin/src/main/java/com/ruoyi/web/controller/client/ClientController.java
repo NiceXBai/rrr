@@ -85,9 +85,16 @@ public class ClientController extends BaseController {
             ajax.put("authority", bizAuthority);
         }
         BizCustomerInfo bizCustomerInfo = bizCustomerInfoService.selectBizCustomerInfoByUserId(user.getUserId());
-
-
-        ajax.put("info", bizCustomerInfo);
+        if(bizCustomerInfo==null){
+            BizCustomerInfo newCustomerInfo = new BizCustomerInfo();
+            newCustomerInfo.setBalance("0.0");
+            newCustomerInfo.setUserId(user.getUserId());
+            newCustomerInfo.setCreateBy(user.getUserId()+"");
+            bizCustomerInfoService.insertBizCustomerInfo(newCustomerInfo);
+            ajax.put("info", newCustomerInfo);
+        }else {
+            ajax.put("info", bizCustomerInfo);
+        }
         return ajax;
 
     }
