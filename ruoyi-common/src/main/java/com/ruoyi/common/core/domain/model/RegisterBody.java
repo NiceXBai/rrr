@@ -43,8 +43,8 @@ public class RegisterBody
         this.uuid = uuid;
     }
 
-//    @NotBlank(message = "密码不能为空")
-//    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
     public String getRepassword() {
         return repassword;
     }
@@ -53,8 +53,8 @@ public class RegisterBody
         this.repassword = repassword;
     }
 
-//    @NotBlank(message = "用户手机号不能为空")
-//    @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
+    @NotBlank(message = "用户手机号不能为空")
+    @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
     public String getUsername()
     {
         return username;
@@ -64,8 +64,8 @@ public class RegisterBody
     {
         this.username = username;
     }
-//    @NotBlank(message = "密码不能为空")
-//    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
+    @NotBlank(message = "密码不能为空")
+    @Size(min = 6, max = 11, message = "密码长度不能超过11个字符,小于6个字符")
     public String getPassword()
     {
         return password;

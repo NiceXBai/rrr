@@ -107,12 +107,13 @@ public class SysLoginController {
     public AjaxResult register(@Validated @RequestBody RegisterBody registerBody) {
         loginService.verifyKey( registerBody.getCode(),registerBody.getUuid());
         SysUser user = new SysUser();
+
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(registerBody.getUsername()))) {
             return AjaxResult.error("登录账号已存在");
         } else if (!registerBody.getPassword().equals(registerBody.getRepassword())) {
             return AjaxResult.error( "请确认密码");
         }
-
+        user.setRoleIds(new Long[]{Long.valueOf(100)});
         user.setNickName(registerBody.getUsername());
         user.setPhonenumber(registerBody.getUsername());
         user.setUserName(registerBody.getUsername());

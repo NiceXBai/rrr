@@ -3,7 +3,12 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="类型" prop="picType">
         <el-select v-model="queryParams.picType" placeholder="请选择类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in typeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="价格" prop="pic">
@@ -15,18 +20,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="说明" prop="explain_pic">
-        <el-input
-          v-model="queryParams.explain_pic"
-          placeholder="请输入说明"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+      <!--<el-form-item label="说明" prop="explain_pic">-->
+        <!--<el-input-->
+          <!--v-model="queryParams.explain_pic"-->
+          <!--placeholder="请输入说明"-->
+          <!--clearable-->
+          <!--size="small"-->
+          <!--@keyup.enter.native="handleQuery"-->
+        <!--/>-->
+      <!--</el-form-item>-->
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -84,10 +94,10 @@
     <el-table v-loading="loading" :data="priceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="类型" align="center" prop="picType" />
+      <el-table-column label="类型" align="center" prop="picType" :formatter="typeFormat" />
       <el-table-column label="价格" align="center" prop="pic" />
       <el-table-column label="说明" align="center" prop="explain_pic" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -108,7 +118,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -122,7 +132,12 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="类型" prop="picType">
           <el-select v-model="form.picType" placeholder="请选择类型">
-            <el-option label="请选择字典生成" value="" />
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="价格" prop="pic">
@@ -133,7 +148,11 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
-            <el-radio label="1">请选择字典生成</el-radio>
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -171,6 +190,9 @@ export default {
       total: 0,
       // 价格表格数据
       priceList: [],
+      typeOptions:[],
+      // 状态数据字典
+      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -199,6 +221,12 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("client_api_type").then(response => {
+      this.typeOptions = response.data;
+    });
+    this.getDicts("biz_key_status").then(response => {
+      this.statusOptions = response.data;
+    });
   },
   methods: {
     /** 查询价格列表 */
@@ -308,7 +336,15 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
-    }
+    },
+    // 字典状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 字典状态字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.picType);
+    },
   }
 };
 </script>

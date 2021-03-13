@@ -51,7 +51,7 @@ public class ClientController extends BaseController {
         SysUser user = loginUser.getUser();
 
         BizAuthority bizAuthority = bizAuthorityService.selectBizAuthorityByCreater(user.getUserId() + "");
-        bizRecognizeHistory.setAuthorityKey(bizAuthority.getKeyId() + "");
+        bizRecognizeHistory.setAuthorityKey(bizAuthority.getAuthorityKey());
         startPage();
         List<BizRecognizeHistory> list = bizRecognizeHistoryService.selectBizRecognizeHistoryList(bizRecognizeHistory);
         return getDataTable(list);

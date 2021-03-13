@@ -1,29 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="key" prop="authorityKey">
-        <el-input
-          v-model="queryParams.authorityKey"
-          placeholder="请输入key"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
 
-      <el-form-item label="识别方式" prop="recognizeFrom">
-        <el-input
-          v-model="queryParams.recognizeFrom"
-          placeholder="请输入识别方式"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
+
 
       <el-form-item label="识别类型" prop="recognizeType">
         <el-select v-model="queryParams.recognizeType" placeholder="请选择识别类型" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+           <el-option
+          v-for="dict in typeOptions"
+          :key="dict.dictValue"
+          :label="dict.dictLabel"
+          :value="dict.dictValue"
+        />
         </el-select>
       </el-form-item>
 
@@ -32,7 +21,9 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
+    <el-row :gutter="10" class="mb8">
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
 
     <el-table v-loading="loading" :data="historyList" >
       <el-table-column type="selection" width="55" align="center" />
@@ -43,28 +34,18 @@
       <el-table-column label="费用" align="center" prop="expense" />
       <el-table-column label="结果" align="center" prop="result" />
 
-      <el-table-column label="识别类型" align="center" prop="recognizeType" />
+      <el-table-column label="识别类型" align="center" prop="recognizeType"  :formatter="recognizeFormat" />
       <el-table-column label="识别ip" align="center" prop="recognizeIp" />
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['biz:history:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['biz:history:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
+
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
  </div>
 </template>
 
@@ -91,6 +72,7 @@ export default {
       total: 0,
       // 识别记录表格数据
       historyList: [],
+      typeOptions:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -123,7 +105,12 @@ export default {
   },
   created() {
     this.getList();
-  },
+
+    this.getDicts("client_api_type").then(response => {
+      this.typeOptions = response.data;
+    });
+    },
+
   methods: {
     /** 查询识别记录列表 */
     getList() {
@@ -144,6 +131,9 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    recognizeFormat(row, column){
+      return this.selectDictLabel(this.typeOptions, row.recognizeType);
+    }
   }
 };
 </script>
